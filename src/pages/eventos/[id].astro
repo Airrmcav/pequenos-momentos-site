@@ -1,0 +1,82 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const eventosEntries = await getCollection('eventos');
+  
+  return eventosEntries.map(evento => ({
+    params: { id: evento.slug },
+    props: { evento },
+  }));
+}
+
+const { evento } = Astro.props;
+const { Content } = await evento.render();
+---
+
+<Layout title={evento.data.nombre}>
+  <main class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="relative w-full h-64 md:h-96">
+        {evento.data.video ? (
+          <video
+            src={evento.data.video}
+            autoplay
+            loop
+            muted
+            preload="none"
+            title={`Video de ${evento.data.nombre}`}
+            aria-label={`Video del evento ${evento.data.nombre}`}
+            playsinline
+            class="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : evento.data.imagen ? (
+          <img
+            src={evento.data.imagen}
+            alt={evento.data.nombre}
+            title={`Imagen de ${evento.data.nombre}`}
+            class="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : (
+          <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-pink-200 to-purple-200 flex items-center justify-center">
+            <span class="text-4xl">✨</span>
+          </div>
+        )}
+      </div>
+      
+      <div class="p-6">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">{evento.data.nombre}</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <h2 class="text-xl font-semibold text-gray-700 mb-2">Detalles del Evento</h2>
+            <ul class="space-y-2">
+              <li><span class="font-medium">Fecha:</span> {evento.data.fecha}</li>
+              <li><span class="font-medium">Ubicación:</span> {evento.data.ubicacion}</li>
+              <li><span class="font-medium">Tipo:</span> {evento.data.tipoServicio}</li>
+              <li><span class="font-medium">Duración:</span> {evento.data.duracion}</li>
+              <li><span class="font-medium">Asistentes:</span> {evento.data.asistentes}</li>
+            </ul>
+          </div>
+          
+          <div>
+            <h2 class="text-xl font-semibold text-gray-700 mb-2">Servicios Incluidos</h2>
+            <ul class="list-disc pl-5 space-y-1">
+              {evento.data.serviciosIncluidos.map((servicio) => (
+                <li>{servicio}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        
+        <div class="mb-6">
+          <h2 class="text-xl font-semibold text-gray-700 mb-2">Descripción</h2>
+          <p class="text-gray-600">{evento.data.descripcion}</p>
+        </div>
+        
+        <Content />
+      </div>
+    </div>
+  </main>
+</Layout>

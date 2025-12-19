@@ -1,0 +1,22 @@
+---
+import Banner from "../components/Index/Banner.astro";
+import Clientes from "../components/Index/Clientes.astro";
+import Team from "../components/Index/Team.astro";
+import Services from "../components/Index/Services.astro";
+import Layout from "../layouts/Layout.astro";
+import { getCollection } from 'astro:content';
+import Insta from "../components/Index/Insta.astro";
+import Form from "../components/Index/form.astro";
+
+const servicios = await getCollection('servicios');
+
+---
+
+<Layout>
+  <Banner />
+  <main>
+</main>
+</Layout>
+
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>

@@ -1,0 +1,125 @@
+---
+import NavBar from "../components/NavBar.astro";
+import Footer from "../components/Footer.astro";
+import SocialMediaBar from "../components/SocialMediaBar.astro";
+import "../styles/global.css";
+import "@fontsource/manjari";
+import "@fontsource/patrick-hand";
+
+const {
+  title = "Fiestas Infantiles CDMX y Estado de México | Renta de Juegos, Inflables, Decoración y Más",
+  description = "Organizamos eventos infantiles únicos con inflables, albercas de pelotas, decoración y más. ¡Haz de tu fiesta un momento inolvidable!",
+} = Astro.props;
+
+const siteUrl = import.meta.env.SITE_URL || Astro.url.origin;
+const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
+
+const imageUrl = new URL("/Logo/Logo.png", siteUrl).toString();
+const imageWidth = "1200";
+const imageHeight = "630";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Pequeños Momentos",
+  "url": "https://pequenosmomentos.mx/",
+  "logo": "https://pequenosmomentos.mx/logo-sf.png",
+  "sameAs": [
+    "https://www.facebook.com/pequenosmomentos.mx",
+    "https://www.instagram.com/pequenosmomentos.mx/"
+  ],
+  "areaServed": [
+    "Ciudad de México",
+    "Estado de México"
+  ],
+  "paymentAccepted": [
+    "Cash",
+    "Credit Card",
+    "Debit Card",
+    "PayPal"
+  ],
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "telephone": "+52 1 55 3938 5685",
+      "contactType": "Customer Service",
+      "availableLanguage": "Spanish"
+    }
+  ]
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/logo-sf.png" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <meta
+      name="keywords"
+      content="fiestas infantiles, renta de juegos, inflables, decoración, CDMX, Estado de México"
+    />
+    <meta name="author" content="Pequeños Momentos" />
+
+    {/* Open Graph / Facebook */}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content={imageWidth} />
+    <meta property="og:image:height" content={imageHeight} />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:site_name" content="Pequeños Momentos" />
+
+    <meta name="theme-color" content="#F3C4FF" />
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="Pequeños Momentos" />
+
+
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(structuredData)}
+    />
+
+    
+  </head>
+  <body>
+    <header>
+      <NavBar />
+    </header>
+    <div class="relative">
+      <SocialMediaBar />
+    </div>
+    <slot />
+    <Footer />
+  </body>
+</html>
+
+<style>
+  html,
+  body {
+    font-family: "Manjari", sans-serif;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>

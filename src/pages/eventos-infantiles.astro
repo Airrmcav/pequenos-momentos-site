@@ -1,0 +1,297 @@
+---
+// ===== IMPORTS =====
+import Banner from "../components/Servicios/Banner.astro";
+import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import * as Icons from "../components/Icons";
+
+// ===== DATA FETCHING =====
+const servicios = await getCollection("servicios");
+const paquetes = await getCollection("paquetes");
+const actividades = await getCollection("actividades");
+
+// ===== CATEGORIZE SERVICES =====
+const serviciosPorCategoria = servicios.reduce((acc, servicio) => {
+  const categoria = servicio.data.categoria;
+  if (!acc[categoria]) {
+    acc[categoria] = [];
+  }
+  acc[categoria].push(servicio);
+  return acc;
+}, {} as Record<string, typeof servicios>);
+
+// Get unique categories
+const categorias = Object.keys(serviciosPorCategoria);
+
+// ===== UTILITY FUNCTIONS =====
+function getIconComponent(name: string) {
+  return (Icons as Record<string, any>)[name];
+}
+
+// ===== PAGE PROPS =====
+const {
+  title = "Renta de Juegos, Inflables y Paquetes para Fiestas Infantiles | CDMX y Estado de México",
+  description = "Descubre nuestros inflables, albercas de pelotas, castillos y paquetes especiales para fiestas infantiles. Haz que tu evento sea inolvidable.",
+} = Astro.props;
+---
+
+<Layout title={title} description={description}>
+  <Banner />
+  
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="max-w-6xl mx-auto px-4 py-12 pl-17 lg:pl-0">
+    
+    <!-- ===== SERVICIOS SECTION ===== -->
+    <section>
+      <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 text-gray-800 tracking-tight">
+        Nuestros Servicios
+      </h2>
+      <p class="text-center text-lg text-gray-500 mb-12 max-w-2xl mx-auto">
+        Descubre cómo podemos ayudarte a crear momentos inolvidables. Cada
+        servicio está diseñado para ofrecerte la mejor experiencia.
+      </p>
+
+      {categorias.map((categoria) => (
+        <div class="mb-16">
+          <h3 class="text-2xl font-bold text-center mb-8 text-pink-600 border-b-2 border-pink-200 pb-2 max-w-md mx-auto">
+            {categoria}
+          </h3>
+          <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {
+              serviciosPorCategoria[categoria].map((servicio) => {
+                const IconComponent = getIconComponent(servicio.data.icon);
+                return (
+                  <article
+                    class="relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-shadow duration-300 border border-gray-100 flex flex-col overflow-hidden min-h-[420px] group"
+                    itemscope
+                    itemtype="https://schema.org/Product"
+                  >
+                    {/* Media Container */}
+                    <div class="relative w-full h-48 md:h-96">
+                      {servicio.data.video ? (
+                        <video
+                          src={servicio.data.video}
+                          autoplay
+                          preload="none"
+                          loop
+                          muted
+                          title={`Video de ${servicio.data.title}`}
+                          aria-label={`Video del servicio ${servicio.data.title}`}
+                          playsinline
+                          class="absolute inset-0 w-full h-full object-cover opacity-70 pointer-events-none rounded-t-3xl"
+                        />
+                      ) : servicio.data.imageBanner ? (
+                        <img
+                          src={servicio.data.imageBanner}
+                          alt={servicio.data.title}
+                          title={`Imagen de ${servicio.data.title}`}
+                          class="absolute inset-0 w-full h-full object-cover opacity-70 pointer-events-none rounded-t-3xl"
+                        />
+                      ) : (
+                        <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-pink-200 to-purple-200 opacity-70 rounded-t-3xl flex items-center justify-center">
+                          <span class="text-4xl">✨</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Icon Overlay */}
+                    <div class="absolute left-15 bottom-65 -translate-x-1/2 z-20">
+                      <div class="w-24 h-24 flex items-center justify-center rounded-full bg-gradient-to-tr from-pink-200 via-purple-100 to-blue-200 group-hover:scale-110 transition-transform duration-300 shadow-lg border-4 border-white">
+                        {IconComponent ? (
+                          <IconComponent class="w-16 h-16 text-white" />
+                        ) : (
+                          <span class="text-5xl text-white">✨</span>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Content */}
+                    <div class="flex flex-col items-center w-full px-6 pt-16 pb-8 bg-white/80 backdrop-blur-sm rounded-b-3xl mt-[-2.5rem] z-10">
+                      <h3 itemprop="name" class="text-xl font-semibold text-gray-800 mb-2 text-center">
+                        {servicio.data.shortTitle}
+                      </h3>
+                      <p itemprop="description" class="text-gray-500 mb-4 text-center line-clamp-5">
+                        {servicio.data.description}
+                      </p>
+                      {servicio.data.url && (
+                        <a
+                          itemprop="url"
+                          role="button"
+                          aria-label={`Ver detalles del servicio ${servicio.data.shortTitle}`}
+                          href={servicio.data.url}
+                          class="inline-block px-5 py-2 rounded-full bg-gradient-to-r from-pink-400 to-purple-400 text-white font-medium shadow hover:from-pink-500 hover:to-purple-500 transition-colors duration-200"
+                        >
+                          Ver {servicio.data.shortTitle}
+                        </a>
+                      )}
+                    </div>
+                  </article>
+                );
+              })
+            }
+          </div>
+        </div>
+      ))}
+    </section>
+
+    <!-- ===== ACTIVIDADES SECTION ===== -->
+    <section class="mt-24">
+      <h2 class="text-4xl font-bold text-center mb-4 text-gray-800">
+        Actividades
+      </h2>
+      <p class="text-center text-lg text-gray-500 mb-12 max-w-2xl mx-auto">
+        Explora nuestras actividades diseñadas para entretener y divertir a los
+        niños en tus eventos. Desde juegos hasta talleres creativos, tenemos algo
+        para todos.
+      </p>
+
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
+        {
+          actividades.map((actividad) => {
+            const IconComponent = getIconComponent(actividad.data.icon);
+            return (
+              <article
+                class="relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-shadow duration-300 border border-gray-100 flex flex-col overflow-hidden min-h-[420px] group"
+                itemscope
+                itemtype="https://schema.org/Product"
+              >
+                {/* Media Container */}
+                <div class="relative w-full h-48 md:h-96">
+                  {actividad.data.video ? (
+                    <video
+                      src={actividad.data.video}
+                      autoplay
+                      preload="none"
+                      loop
+                      muted
+                      title={`Video de ${actividad.data.title}`}
+                      aria-label={`Video de la actividad ${actividad.data.title}`}
+                      playsinline
+                      class="absolute inset-0 w-full h-full object-cover opacity-70 pointer-events-none rounded-t-3xl"
+                    />
+                  ) : actividad.data.imageBanner ? (
+                    <img
+                      src={actividad.data.imageBanner}
+                      alt={actividad.data.title}
+                      title={`Imagen de ${actividad.data.title}`}
+                      class="absolute inset-0 w-full h-full object-cover opacity-70 pointer-events-none rounded-t-3xl"
+                    />
+                  ) : (
+                    <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-200 to-green-200 opacity-70 rounded-t-3xl flex items-center justify-center">
+                      <span class="text-4xl">✨</span>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Icon Overlay */}
+                <div class="absolute left-15 bottom-65 -translate-x-1/2 z-20">
+                  <div class="w-24 h-24 flex items-center justify-center rounded-full bg-gradient-to-tr from-pink-200 via-purple-100 to-blue-200 group-hover:scale-110 transition-transform duration-300 shadow-lg border-4 border-white">
+                    {IconComponent ? (
+                      <IconComponent class="w-16 h-16 text-white" />
+                    ) : (
+                      <span class="text-5xl text-white">✨</span>
+                    )}
+                  </div>
+                </div>
+                
+                {/* Content */}
+                <div class="flex flex-col items-center w-full px-6 pt-16 pb-8 bg-white/80 backdrop-blur-sm rounded-b-3xl mt-[-2.5rem] z-10">
+                  <h3 itemprop="name" class="text-xl font-semibold text-gray-800 mb-2 text-center">
+                    {actividad.data.shortTitle}
+                  </h3>
+                  <p itemprop="description" class="text-gray-500 mb-4 text-center line-clamp-5">
+                    {actividad.data.description}
+                  </p>
+                  {actividad.data.url && (
+                    <a
+                      itemprop="url"
+                      role="button"
+                      aria-label={`Ver detalles de la actividad ${actividad.data.shortTitle}`}
+                      href={actividad.data.url}
+                      class="inline-block px-5 py-2 rounded-full bg-gradient-to-r from-pink-400 to-purple-400 text-white font-medium shadow hover:from-pink-500 hover:to-purple-500 transition-colors duration-200"
+                    >
+                      Ver {actividad.data.shortTitle}
+                    </a>
+                  )}
+                </div>
+              </article>
+            );
+          })
+        }
+      </div>
+    </section>
+
+    <!-- ===== PAQUETES SECTION ===== -->
+    <section class="mt-24">
+      <h2 class="text-4xl font-bold text-center mb-4 text-gray-800">
+        Paquetes Especiales
+      </h2>
+      <p class="text-center text-lg text-gray-500 mb-12 max-w-2xl mx-auto">
+        Combina nuestras atracciones favoritas en paquetes únicos para tus eventos
+        más importantes.
+      </p>
+
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
+        {
+          paquetes.map((paquete) => (
+            <article
+              class="relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-shadow duration-300 border border-gray-100 flex flex-col overflow-hidden group"
+              itemscope
+              itemtype="https://schema.org/Product"
+            >
+              {/* Media Container */}
+              <div class="relative w-full h-48 md:h-72">
+                {paquete.data.video ? (
+                  <video
+                    src={paquete.data.video}
+                    autoplay
+                    loop
+                    muted
+                    preload="none"
+                    title={`Video de ${paquete.data.title}`}
+                    aria-label={`Video del paquete ${paquete.data.title}`}
+                    playsinline
+                    class="absolute inset-0 w-full h-full object-cover opacity-70 pointer-events-none rounded-t-3xl"
+                  />
+                ) : paquete.data.imageBanner ? (
+                  <img
+                    src={paquete.data.imageBanner}
+                    alt={paquete.data.title}
+                    title={`Imagen de ${paquete.data.title}`}
+                    class="absolute inset-0 w-full h-full object-cover opacity-70 pointer-events-none rounded-t-3xl"
+                  />
+                ) : (
+                  <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-pink-200 to-purple-200 opacity-70 rounded-t-3xl flex items-center justify-center">
+                    <span class="text-4xl">✨</span>
+                  </div>
+                )}
+              </div>
+              
+              {/* Content */}
+              <div class="flex flex-col items-center w-full px-6 pt-8 pb-8 bg-white/80 backdrop-blur-sm rounded-b-3xl z-10">
+                <h3 itemprop="name" class="text-xl font-semibold text-gray-800 mb-2 text-center">
+                  {paquete.data.title}
+                </h3>
+                <p itemprop="description" class="text-gray-500 mb-4 text-center line-clamp-4">
+                  {paquete.data.description}
+                </p>
+                {paquete.data.url && (
+                  <a
+                    itemprop="url"
+                    href={paquete.data.url}
+                    role="button"
+                    aria-label={`Ver detalles del paquete ${paquete.data.title}`}
+                    class="inline-block px-5 py-2 rounded-full bg-gradient-to-r from-purple-500 to-blue-400 text-white font-medium shadow hover:from-purple-600 hover:to-blue-500 transition-colors duration-200"
+                  >
+                    Ver detalles del paquete
+                  </a>
+                )}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+    
+  </main>
+</Layout>

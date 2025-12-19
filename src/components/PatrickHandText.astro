@@ -1,0 +1,19 @@
+---
+interface Props {
+  text: string;
+  className?: string;
+}
+
+const { text, className = "" } = Astro.props;
+---
+
+<span class={`font-patrick-hand ${className}`}>
+  {text}
+</span>
+
+<style>
+  .font-patrick-hand {
+    font-family: 'Patrick Hand', cursive;
+    letter-spacing: 0.05em;
+  }
+</style>

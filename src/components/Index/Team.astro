@@ -1,0 +1,113 @@
+---
+import PatrickHandText from '../PatrickHandText.astro';
+
+const teamMembers = [
+  {
+    name: "Alberto",
+    role: "Diseñador de Eventos",
+    description: "Especialista en crear momentos mágicos donde cada detalle cuenta.",
+    image: "/perfil/andrea.png"
+  },
+  {
+    name: "Jorge",
+    role: "Coordinador de Eventos",
+    description: "Experto en logística y organización de eventos memorables.",
+    image: "/perfil/andrea.png"
+  },
+  {
+    name: "Ana Martínez",
+    role: "Decoradora Principal",
+    description: "Creatividad y elegancia en cada proyecto que realizamos.",
+    image: "/perfil/andrea.png"
+  },
+  {
+    name: "Luis Pérez",
+    role: "Animador Senior",
+    description: "Especialista en crear sonrisas y momentos inolvidables.",
+    image: "/perfil/andrea.png"
+  }
+];
+---
+
+<section class="max-w-7xl mx-auto px-10 py-16">
+    <h2 class=" mb-12 text-4xl">
+        Nuestro Equipo
+    </h2>
+
+    {/* Miembro Principal Centrado */}
+    <div class="flex justify-center mb-10">
+        <div class="xl:w-1/3 sm:w-3/4 md:w-2/5 relative mt-16 mb-32 sm:mb-24 xl:max-w-sm lg:w-2/5">
+            <div class="rounded overflow-hidden shadow-2xl bg-white">
+                <div class="absolute -mt-20 w-full flex justify-center">
+                    <div class="h-32 w-32">
+                        <img
+                            src="/perfil/andrea.png"
+                            alt="Andrea - Fundadora"
+                            role="img"
+                            class="rounded-full object-cover h-full w-full shadow-xl"
+                        />
+                    </div>
+                </div>
+                <div class="px-6 mt-16">
+                    <h1 class="font-bold text-3xl text-center mb-1">
+                        Andrea
+                    </h1>
+                    <p class="text-gray-800 text-sm text-center">
+                        Fundadora y Directora Creativa
+                    </p>
+                    <p class="text-center text-gray-600 text-base pt-3 font-normal">
+                        Creando momentos mágicos y haciendo realidad los sueños de nuestros clientes.
+                    </p>
+                    <div class="w-full flex justify-center pt-5 pb-5">
+                        <a href="#" class="mx-5">
+                            <div aria-label="Facebook" role="img">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#718096" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook">
+                                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                                </svg>
+                            </div>
+                        </a>
+                        <a href="#" class="mx-5">
+                            <div aria-label="Instagram" role="img">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#718096" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram">
+                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                </svg>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    {teamMembers.map(member => (
+        <div class="xl:w-full relative mt-1">
+            <div class="rounded overflow-hidden shadow-md bg-white h-[200px]"> 
+                <div class="absolute -mt-20 w-full flex justify-center">
+                    <div class="h-32 w-32">
+                        <img
+                            src={member.image}
+                            alt={member.name}
+                            role="img"
+                            class="rounded-full object-cover h-full w-full shadow-md"
+                        />
+                    </div>
+                </div>
+                <div class="px-6 mt-16 flex flex-col h-full"> {/* Agregado flex y flex-col para organizar el contenido */}
+                    <h1 class="font-bold text-xl text-center mb-1">
+                        {member.name}
+                    </h1>
+                    <p class="text-gray-800 text-md text-center">
+                        {member.role}
+                    </p>
+                    <p class="text-center text-gray-600 text-sm pt-3 font-normal flex-grow"> {/* Agregado flex-grow */}
+                        {member.description}
+                    </p>
+                </div>
+            </div>
+        </div>
+    ))}
+</div>
+</section>

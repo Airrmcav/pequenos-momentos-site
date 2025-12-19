@@ -1,0 +1,229 @@
+---
+import { getCollection } from "astro:content";
+import * as Icons from "../../components/Icons";
+import Layout from "../../layouts/Layout.astro";
+import { render } from "astro:content";
+
+export async function getStaticPaths() {
+  const actividades = await getCollection("actividades");
+  return actividades.map((actividad) => ({
+    params: { id: actividad.slug },
+    props: { actividad },
+  }));
+}
+
+const { actividad } = Astro.props;
+const { data } = actividad;
+const { title, shortTitle, description, video, icon, images } = data;
+const { Content } = await render(actividad);
+const IconComponent = (Icons as Record<string, any>)[icon];
+---
+
+<Layout title={title} description={description}>
+  <!-- Hero Section Mejorado -->
+  <section
+    class="relative overflow-hidden bg-gradient-to-br from-pink-100 via-green-100 to-sky-100"
+  >
+    <!-- Decoración de fondo -->
+
+    <div
+      class="relative z-10 min-h-screen flex items-center justify-center py-12 px-4"
+    >
+      <div class="w-full max-w-7xl">
+        <!-- Contenedor principal del hero -->
+        <div
+          class="bg-transparent backdrop-blur-xl rounded-3xl max-w-5xl flex justify-center mx-auto shadow-2xl overflow-hidden mt-10 lg:mt-5"
+        >
+          <div
+            class="grid lg:grid-cols-2 gap-0 items-start lg:max-h-[600px] pl-13"
+          >
+            <!-- Contenido textual -->
+            <div class="p-2 lg:p-8 order-2 lg:order-1">
+              <div class="flex items-center mb-6">
+                {
+                  IconComponent ? (
+                    <div class="relative">
+                      <div class="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl blur opacity-75" />
+                      <div class="relative bg-gradient-to-r from-purple-500 to-pink-500 p-4 rounded-2xl">
+                        <IconComponent class="w-12 h-12 text-white" />
+                      </div>
+                    </div>
+                  ) : (
+                    <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-4 rounded-2xl">
+                      <span class="text-3xl">✨</span>
+                    </div>
+                  )
+                }
+                <div class="ml-4">
+                  <div
+                    class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium"
+                  >
+                    Servicio Premium
+                  </div>
+                </div>
+              </div>
+
+              <h1
+                class="text-4xl lg:text-5xl font-black text-gray-900 mb-3 leading-tight"
+              >
+                <span
+                  class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
+                >
+                  {shortTitle}
+                </span>
+              </h1>
+
+              <p class="text-xl text-gray-600 mb-5 leading-relaxed">
+                {description}
+              </p>
+
+              <!-- Botones de acción -->
+              <div class="flex flex-col sm:flex-row gap-4">
+                <a
+                  href={`https://web.whatsapp.com/send?phone=525539385685&text=${encodeURIComponent(
+                    `Hola, me gustaría cotizar la actividad ${shortTitle}`
+                  )}`}
+                  target="_blank"
+                  class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
+                >
+                  Cotizar esta Actividad
+                </a>
+                <a
+                  href="/contacto"
+                  class="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-xl font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-300"
+                >
+                  Más Información
+                </a>
+              </div>
+            </div>
+
+            <!-- Media principal -->
+            <div class="relative order-1 lg:order-2 h-96 lg:h-[600px]">
+              {
+                video ? (
+                  <video
+                    src={video}
+                    autoplay
+                    loop
+                    muted
+                    playsinline
+                    class="w-full h-full object-cover"
+                  />
+                ) : (
+                  images &&
+                  images[0] && (
+                    <img
+                      src={images[0].src}
+                      alt={images[0].alt || title}
+                      class="w-full h-full object-cover"
+                    />
+                  )
+                )
+              }
+              <!-- Overlay gradient -->
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent lg:bg-gradient-to-l lg:from-transparent lg:to-black/10"
+              >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estadísticas o features rápidas -->
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div
+            class="bg-white/90 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg"
+          >
+            <div class="text-3xl font-bold text-purple-600 mb-2">100%</div>
+            <div class="text-gray-600">Diversión Garantizada</div>
+          </div>
+          <div
+            class="bg-white/90 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg"
+          >
+            <div class="text-3xl font-bold text-pink-600 mb-2">24/7</div>
+            <div class="text-gray-600">Soporte Completo</div>
+          </div>
+          <div
+            class="bg-white/90 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg"
+          >
+            <div class="text-3xl font-bold text-purple-600 mb-2">5★</div>
+            <div class="text-gray-600">Calificación Promedio</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contenido Markdown con diseño mejorado -->
+  <section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+      <!-- Decoración superior -->
+      <div class="text-center mb-12">
+        <div
+          class="inline-block p-3 bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl mb-4"
+        >
+          <div
+            class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center"
+          >
+            <svg
+              class="w-6 h-6 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4 pl-17 lg:pl-0">
+          Detalles del Servicio
+        </h2>
+        <div
+          class="w-24 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full"
+        >
+        </div>
+      </div>
+
+      <!-- Contenido Markdown estilizado -->
+      <article class="pl-17 lg:pl-0">
+        <div
+          class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-3xl p-3 shadow-inner"
+        >
+          <Content />
+        </div>
+      </article>
+
+      <!-- Call to action final -->
+      <div class="mt-16 text-center pl-17 lg:pl-0">
+        <div
+          class="bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl p-8 text-white"
+        >
+          <h3 class="text-2xl font-bold mb-4">¿Listo para la Diversión?</h3>
+          <p class="text-purple-100 mb-6 text-lg">
+            Contáctanos ahora y hagamos de tu evento algo inolvidable
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="https://web.whatsapp.com/send?phone=525539385685"
+              target="_blank"
+
+              class="group bg-white cursor-pointer text-purple-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-50 transform hover:scale-105 hover:shadow-lg active:scale-95 transition-all duration-300"
+            >
+              <span class="inline-flex items-center">
+                📞
+                <span class="ml-2 group-hover:ml-3 transition-all duration-200"
+                  >Enviar mensaje</span
+                >
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

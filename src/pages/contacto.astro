@@ -1,0 +1,17 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+import Form from "../components/Index/Form.astro";
+
+const servicios = await getCollection("servicios");
+---
+
+<Layout>
+  <!-- <Banner /> -->
+  <main>
+    <Form />
+  </main>
+</Layout>
+
+

@@ -1,0 +1,271 @@
+---
+const servicios = [
+  "Bouncy Bubble",
+  "Bumper Cars", 
+  "Lee's Castle",
+  "Alberca de pelotas",
+  "Mobiliario Rejita Blanco",
+  "Estación de Arte",
+  "Mobiliario silla Ghost Kids",
+  "Mobiliario Rejita Pastel",
+  "White Bounce House",
+  "Funny Bunny",
+  "Cerámica",
+  "Flowerpot",
+  "Libros para colorear",
+  "Bolsitas temáticas",
+  "Nannys para Eventos",
+  "Invitación digital",
+  "Duo",
+  "Duo plus"
+];
+---
+
+<style>
+
+  .gradient-bg {
+    background: linear-gradient(135deg, #fbf5ff 0%, #764ba2 100%);
+  }
+  
+  .card-gradient {
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  .service-card {
+    transition: all 0.3s ease;
+    background: linear-gradient(145deg, #f8fafc, #ffffff);
+    border: 2px solid transparent;
+  }
+  
+  .service-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+    border-color: #667eea;
+  }
+  
+  .service-card.selected {
+    background: linear-gradient(145deg, #667eea, #764ba2);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  }
+  
+  .btn-whatsapp {
+    background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+    transition: all 0.3s ease;
+  }
+  
+  .btn-whatsapp:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
+  }
+  
+  .btn-whatsapp-web {
+    background: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%);
+    transition: all 0.3s ease;
+  }
+  
+  .btn-whatsapp-web:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(66, 133, 244, 0.3);
+  }
+  
+  
+  .shape {
+    position: absolute;
+    opacity: 0.1;
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  
+  
+  
+  .input-field {
+    transition: all 0.3s ease;
+    border: 2px solid #e2e8f0;
+  }
+  
+  .input-field:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
+  }
+  
+  .title-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+</style>
+
+<div class="min-h-screen gradient-bg font-poppins relative pt-20 lg:pt-10 pl-14 lg:pl-0">
+  <div class="container mx-auto px-4 py-8 relative z-10">
+    <div class="text-center mb-8">
+      <h1 class="text-4xl md:text-5xl font-fredoka title-gradient mb-4">
+        🎈 ¡Organicemos tu Fiesta! 🎉
+      </h1>
+      <p class="text-white text-lg md:text-xl font-light">
+        Cotiza tu evento infantil de manera rápida y sencilla
+      </p>
+    </div>
+    
+    <form id="formularioContacto" class="max-w-4xl mx-auto card-gradient rounded-3xl p-8 space-y-6">
+      <div class="grid md:grid-cols-3 gap-6">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            🎂 Tipo de celebración
+          </label>
+          <input type="text" name="celebracion" required 
+                 placeholder="Ej: Cumpleaños, Baby shower, etc."
+                 class="input-field w-full rounded-xl border p-4 focus:outline-none font-medium" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            📅 Fecha del evento
+          </label>
+          <input type="date" name="fecha" required 
+                 class="input-field w-full rounded-xl border p-4 focus:outline-none font-medium" />
+        </div>
+        <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">
+          📍 Lugar del evento
+        </label>
+        <input type="text" name="lugar" required 
+               placeholder="Dirección completa del evento"
+               class="input-field w-full rounded-xl border p-4 focus:outline-none font-medium" />
+      </div>
+      </div>
+
+      
+
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-4">
+          ✨ Servicios de interés (selecciona los que te gusten)
+        </label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-2" 
+             style="scrollbar-width: thin; scrollbar-color: #667eea #f1f5f9;">
+          {servicios.map(servicio => (
+            <div class="service-card rounded-xl p-4 cursor-pointer" data-service={servicio}>
+              <div class="flex items-center">
+                <input type="checkbox" name="servicios" value={servicio} class="hidden" />
+                <div class="w-5 h-5 border-2 border-gray-300 rounded-md mr-3 flex-shrink-0 checkbox"></div>
+                <span class="text-sm font-medium">
+                  {servicio === "Bouncy Bubble" && "🫧"}
+                  {servicio === "Bumper Cars" && "🚗"}
+                  {servicio === "Lee's Castle" && "🏰"}
+                  {servicio === "Alberca de pelotas" && "⚽"}
+                  {servicio === "Mobiliario Rejita Blanco" && "🪑"}
+                  {servicio === "Estación de Arte" && "🎨"}
+                  {servicio === "Mobiliario silla Ghost Kids" && "👻"}
+                  {servicio === "Mobiliario Rejita Pastel" && "🌸"}
+                  {servicio === "White Bounce House" && "🏠"}
+                  {servicio === "Funny Bunny" && "🐰"}
+                  {servicio === "Cerámica" && "🏺"}
+                  {servicio === "Flowerpot" && "🌺"}
+                  {servicio === "Libros para colorear" && "📚"}
+                  {servicio === "Bolsitas temáticas" && "🎁"}
+                  {servicio === "Nannys para Eventos" && "👩‍🍼"}
+                  {servicio === "Invitación digital" && "💌"}
+                  {servicio === "Duo" && "🎭"}
+                  {servicio === "Duo plus" && "⭐"}
+                  {" " + servicio}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-4 pt-4">
+        <button type="button" onclick="enviarWhatsApp('app')" 
+                class="btn-whatsapp w-full text-white py-4 px-6 rounded-xl font-semibold text-lg flex items-center justify-center gap-2">
+          <span class="text-2xl">📱</span>
+          Enviar por App WhatsApp
+        </button>
+        <button type="button" onclick="enviarWhatsApp('web')" 
+                class="btn-whatsapp-web w-full text-white py-4 px-6 rounded-xl font-semibold text-lg flex items-center justify-center gap-2">
+          <span class="text-2xl">💻</span>
+          Enviar por WhatsApp Web
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script is:inline>
+  // Manejar selección de servicios
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.service-card').forEach(card => {
+      card.addEventListener('click', function() {
+        const checkbox = this.querySelector('input[type="checkbox"]');
+        const checkboxDiv = this.querySelector('.checkbox');
+        
+        checkbox.checked = !checkbox.checked;
+        
+        if (checkbox.checked) {
+          this.classList.add('selected');
+          checkboxDiv.innerHTML = '✓';
+          checkboxDiv.style.backgroundColor = 'white';
+          checkboxDiv.style.borderColor = 'white';
+        } else {
+          this.classList.remove('selected');
+          checkboxDiv.innerHTML = '';
+          checkboxDiv.style.backgroundColor = 'transparent';
+          checkboxDiv.style.borderColor = '#d1d5db';
+        }
+      });
+    });
+  });
+
+  function enviarWhatsApp(tipo) {
+    const form = document.getElementById('formularioContacto');
+    const celebracion = form.celebracion.value.trim();
+    const fecha = form.fecha.value;
+    const lugar = form.lugar.value.trim();
+
+    if (!celebracion || !fecha || !lugar) {
+      alert('Por favor completa todos los campos obligatorios');
+      return;
+    }
+
+    const checkboxes = form.querySelectorAll('input[name="servicios"]:checked');
+    const serviciosSeleccionados = Array.from(checkboxes).map(cb => `• ${cb.value}`).join('\n');
+
+    const mensajeWeb = 
+`🎉 ¡Hola! Me gustaría cotizar una celebración:
+
+📅 Tipo de celebración: ${celebracion}
+📆 Fecha: ${fecha}
+📍 Lugar: ${lugar}
+
+✨ Servicios de interés:
+${serviciosSeleccionados || '• Sin servicios específicos seleccionados'}
+
+¡Espero su respuesta! 😊`;
+
+    const mensajeApp = 
+`Hola! Me gustaría cotizar una celebración:
+
+Tipo de celebración: ${celebracion}
+Fecha: ${fecha}
+Lugar: ${lugar}
+
+Servicios de interés:
+${serviciosSeleccionados || '• Sin servicios específicos seleccionados'}
+
+¡Espero su respuesta!`;
+
+    const numero = '525539385685';
+    const baseUrl = tipo === 'web' ? 'https://web.whatsapp.com/send' : 'https://wa.me';
+    const mensaje = tipo === 'web' ? mensajeWeb : mensajeApp;
+
+    const url = tipo === 'web'
+      ? `${baseUrl}?phone=${numero}&text=${encodeURIComponent(mensaje)}`
+      : `${baseUrl}/${numero}?text=${encodeURIComponent(mensaje)}`;
+
+    window.open(url, '_blank');
+  }
+</script>

@@ -1,0 +1,257 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+const eventos = await getCollection("eventos");
+
+const {
+  title = "Organización de Eventos Infantiles en CDMX y Estado de México | Fiestas Inolvidables",
+  description = "Eventos infantiles mágicos y divertidos: renta de inflables, shows, decoración personalizada y paquetes para cumpleaños inolvidables.",
+} = Astro.props;
+---
+
+<Layout title={title} description={description}>
+  <main>
+    <!-- Hero Section -->
+    <section
+      class="relative min-h-screen bg-gradient-to-tr from-pink-200 via-purple-100 to-blue-200 overflow-hidden pl-17 lg:pl-0"
+    >
+      <!-- Decoración de fondo -->
+      <div class="absolute inset-0">
+        <div
+          class="absolute top-20 left-20 w-72 h-72 bg-pink-300/30 rounded-full blur-3xl animate-pulse"
+        >
+        </div>
+        <div
+          class="absolute bottom-20 right-20 w-96 h-96 bg-blue-300/30 rounded-full blur-3xl animate-pulse delay-1000"
+        >
+        </div>
+        <div
+          class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/40 rounded-full blur-2xl"
+        >
+        </div>
+      </div>
+
+      <div
+        class="relative z-10 min-h-screen flex items-center justify-center px-4"
+      >
+        <div class="text-center max-w-4xl mx-auto">
+          <div class="inline-block bg-transparent backdrop-blur-sm rounded-2xl">
+            <h1 class="text-5xl md:text-7xl font-black text-gray-800">
+              Nuestros
+              <span
+                class="bg-gradient-to-r from-pink-400 to-blue-400 bg-clip-text text-transparent"
+              >
+                Eventos
+              </span>
+            </h1>
+          </div>
+
+          <p class="text-xl md:text-2xl text-gray-700 mb-8 leading-relaxed">
+            Momentos únicos, celebraciones perfectas. Descubre la magia que
+            hemos creado en cada evento especial.
+          </p>
+
+          <div
+            class="flex flex-col sm:flex-row gap-4 justify-center items-center"
+          >
+            <a
+              href="/eventos-infantiles"
+              class="bg-white/80 text-purple-700 px-8 py-4 rounded-2xl font-bold hover:bg-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 active:scale-95"
+            >
+              Ver Todos los Servicios
+            </a>
+            <a
+              href="https://web.whatsapp.com/send?phone=525539385685"
+              target="_blank"
+              aria-label="Contactar por WhatsApp"
+              class="border-2 border-white/80 bg-white/20 backdrop-blur-sm text-gray-700 px-8 py-4 rounded-2xl font-bold hover:bg-white/30 transform hover:scale-105 hover:shadow-xl transition-all duration-300 active:scale-95"
+            >
+              Solicitar Cotización
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Indicador de scroll -->
+      <div
+        class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce"
+      >
+        <svg
+          class="w-6 h-6 text-gray-600"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Filtros de Eventos -->
+    <section class="py-16 bg-gray-50 pl-17 lg:pl-0">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Explora Nuestros Eventos
+          </h2>
+          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+            Cada celebración es única y especial. Aquí puedes ver algunos de
+            nuestros trabajos más destacados.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Grid de Eventos -->
+    <section class="py-16 bg-white pl-17 lg:pl-0">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {
+            eventos.map((evento, index) => (
+              <article class="group bg-white rounded-3xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-500 overflow-hidden border border-gray-100">
+                <div class="relative h-96 overflow-hidden">
+                  {evento.data.video ? (
+                    <video
+                      src={evento.data.video}
+                      class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                      muted
+                      loop
+                      autoplay
+                    />
+                  ) : (
+                    <img
+                      src={evento.data.imagen}
+                      alt={evento.data.nombre}
+                      class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                    />
+                  )}
+
+                  <div class="absolute top-4 left-4">
+                    <span class="bg-gradient-to-r from-pink-300 to-blue-300 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+                      {evento.data.tipoServicio}
+                    </span>
+                  </div>
+
+                  <div class="absolute top-4 right-4">
+                    <div class="bg-white/90 backdrop-blur-sm text-gray-800 px-3 py-2 rounded-xl shadow-lg">
+                      <div class="text-center">
+                        <div class="text-xs font-semibold text-purple-500 uppercase">
+                          {new Date(evento.data.fecha).toLocaleDateString(
+                            "es-ES",
+                            {
+                              month: "short",
+                            }
+                          )}
+                        </div>
+                        <div class="text-lg font-bold">
+                          {new Date(evento.data.fecha).getDate()}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="p-6">
+                  <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-pink-600 transition-colors duration-300">
+                    {evento.data.nombre}
+                  </h3>
+
+                  <p class="text-gray-600 mb-4 line-clamp-3">
+                    {evento.data.descripcion}
+                  </p>
+
+                  <div class="flex items-center text-gray-500 mb-4">
+                    <svg
+                      class="w-4 h-4 mr-2 flex-shrink-0"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    <span class="text-sm">{evento.data.ubicacion}</span>
+                  </div>
+
+                  <div class="mb-6">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-2">
+                      Servicios incluidos:
+                    </h4>
+                    <div class="flex flex-wrap gap-2">
+                      {evento.data.serviciosIncluidos.map((servicio) => (
+                        <span class="bg-pink-50 text-pink-700 px-3 py-1 rounded-full text-xs font-medium">
+                          {servicio}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section
+      class="py-16 bg-gradient-to-tr from-pink-200 via-purple-100 to-blue-200 relative overflow-hidden pl-17 lg:pl-0"
+    >
+      <!-- Decoración -->
+      <div class="absolute inset-0">
+        <div
+          class="absolute top-0 left-0 w-64 h-64 bg-white/30 rounded-full blur-3xl"
+        >
+        </div>
+        <div
+          class="absolute bottom-0 right-0 w-96 h-96 bg-pink-200/40 rounded-full blur-3xl"
+        >
+        </div>
+      </div>
+
+      <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
+          ¿Listo para crear tu evento perfecto?
+        </h2>
+        <p class="text-xl text-gray-700 mb-8">
+          Cada celebración merece ser única. Permítenos hacer realidad la fiesta
+          de tus sueños.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="/contacto"
+            class="group bg-white/80 text-pink-700 px-8 py-4 rounded-2xl font-bold hover:bg-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+          >
+            <span class="inline-flex items-center">
+              ✨
+              <span class="ml-2 group-hover:ml-3 transition-all duration-200"
+                >Solicitar Cotización</span
+              >
+            </span>
+          </a>
+          <a
+            href="https://web.whatsapp.com/send?phone=525539385685"
+            target="_blank"
+            aria-label="Contactar por WhatsApp"
+            class="group border-2 border-white/80 bg-white/20 backdrop-blur-sm text-gray-700 px-8 py-4 rounded-2xl font-bold hover:bg-white/30 transform hover:scale-105 hover:shadow-xl transition-all duration-300"
+          >
+            <span class="inline-flex items-center">
+              📱
+              <span class="ml-2 group-hover:ml-3 transition-all duration-200"
+                >Contactar por WhatsApp</span
+              >
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
