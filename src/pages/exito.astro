@@ -53,7 +53,7 @@ if (sessionId) {
       const transporter = nodemailer.createTransport({
         host: import.meta.env.SMTP_HOST,
         port: Number(import.meta.env.SMTP_PORT),
-        secure: true, 
+        secure: false, 
         auth: {
           user: import.meta.env.SMTP_USER,
           pass: import.meta.env.SMTP_PASS,
