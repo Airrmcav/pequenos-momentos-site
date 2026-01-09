@@ -26,3 +26,4 @@ pnpm-debug.log*
 *.zip
 dist.zip
 public/videos.zip
+dist/

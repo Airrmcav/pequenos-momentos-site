@@ -4,15 +4,22 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
+    "start": "node ./dist/server/entry.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^9.5.1",
     "@fontsource/manjari": "^5.2.5",
     "@fontsource/patrick-hand": "^5.2.5",
     "@tailwindcss/vite": "^4.1.8",
     "astro": "^5.8.2",
+    "nodemailer": "^7.0.12",
+    "stripe": "^20.1.1",
     "tailwindcss": "^4.1.8"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^7.0.4"
   }
 }

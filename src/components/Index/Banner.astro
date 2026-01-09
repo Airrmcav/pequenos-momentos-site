@@ -7,7 +7,7 @@ import PatrickHandText from "../PatrickHandText.astro";
 >
   <div>
     <div
-      class="lg:block md:absolute md:top-34 md:left-1 md:w-[450px] w-full mb-6 md:mb-0 hidden "
+      class="lg:block md:absolute md:top-34 md:left-1 md:w-[450px] w-full mb-6 md:mb-0 hidden"
     >
       <img
         src="/logo-sf.png"
@@ -19,18 +19,22 @@ import PatrickHandText from "../PatrickHandText.astro";
     <!-- Texto centrado -->
     <div class="flex justify-center text-center pt-0 md:pt-8 px-4">
       <div>
-        <h1 class="font-bold text-md lg:text-3xl text-gray-700 max-w-3xl my-5 lg:pl-0 pl-20">
-          Renta de inflables, mobiliario y juegos infantiles para eventos
-          | Pequeños Momentos | CDMX y Estado de México <br />
+        <h1
+          class="font-bold text-md lg:text-3xl text-gray-700 max-w-3xl my-5 lg:pl-0 pl-20"
+        >
+          Renta de inflables, mobiliario y juegos infantiles para eventos |
+          Pequeños Momentos | CDMX y Estado de México <br />
         </h1>
-        <h2 class="font-bold text-md text-center lg:text-2xl text-gray-700 max-w-5xl lg:pl-0 pl-20">
+        <h2
+          class="font-bold text-md text-center lg:text-2xl text-gray-700 max-w-5xl lg:pl-0 pl-20"
+        >
           !Hola! <br />
           Mi nombre es Andrea
         </h2>
       </div>
     </div>
 
-    <div
+    <div4
       class="max-w-2xl mx-auto px-4 text-justify lg:text-center text-gray-700 lg:pl-0 pl-17"
     >
       <ul class="list-none space-y-4 text-sm lg:text-lg">
@@ -55,6 +59,45 @@ import PatrickHandText from "../PatrickHandText.astro";
           />
         </li>
       </ul>
-    </div>
+      <div class="mt-6 flex flex-col sm:flex-row sm:justify-center gap-4">
+        <!-- Botón principal -->
+        <a
+          href="/asesoria-personalizada"
+          class="px-6 py-3 rounded-full font-semibold text-white
+           bg-gradient-to-r from-pink-400 to-fuchsia-500
+           shadow-lg shadow-pink-200
+           hover:from-pink-500 hover:to-fuchsia-600
+           hover:scale-105
+           cursor-pointer
+           active:scale-95
+           text-xl
+           flex-1/2
+           transition-all duration-300 ease-in-out
+           focus:outline-none focus:ring-4 focus:ring-pink-300"
+        >
+          🌸 Asesoría Personalizada
+        </a>
+
+        <!-- Botón secundario -->
+        <a
+          href="/mentoria-premium"
+          class="px-6 py-3 rounded-full font-semibold text-fuchsia-600
+          flex-1/2
+           bg-white/80 backdrop-blur
+           border border-fuchsia-300
+           cursor-pointer
+           shadow-md
+           hover:bg-fuchsia-50
+           hover:text-fuchsia-700
+           hover:scale-105
+           active:scale-95
+           text-xl
+           transition-all duration-300 ease-in-out
+           focus:outline-none focus:ring-4 focus:ring-fuchsia-200"
+        >
+          ⭐ Mentoría Premium
+        </a>
+      </div>
+    </div4>
   </div>
 </section>
