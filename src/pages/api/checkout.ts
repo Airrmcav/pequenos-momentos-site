@@ -26,7 +26,7 @@ export const POST: APIRoute = async ({ request, redirect }) => {
           },
         ],
         mode: "payment",
-        success_url: `${import.meta.env.PUBLIC_DOMAIN}/exito?session_id={CHECKOUT_SESSION_ID}`,
+        success_url: `${import.meta.env.PUBLIC_DOMAIN}/exito?sid={CHECKOUT_SESSION_ID}`,
         cancel_url: `${import.meta.env.PUBLIC_DOMAIN}/asesoria-personalizada`,
         customer_email: email ? email.toString() : undefined,
         metadata: {

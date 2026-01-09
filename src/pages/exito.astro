@@ -1,9 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Stripe from "stripe";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-const sessionId = Astro.url.searchParams.get('session_id');
+const sessionId = Astro.url.searchParams.get('session_id') || Astro.url.searchParams.get('sid');
 let customerEmail = '';
 let productName = 'Servicio';
 
@@ -50,46 +50,41 @@ if (sessionId) {
 
     // Enviar correo si tenemos el email
     if (customerEmail) {
-      const transporter = nodemailer.createTransport({
-        host: import.meta.env.SMTP_HOST,
-        port: Number(import.meta.env.SMTP_PORT),
-        secure: false, 
-        auth: {
-          user: import.meta.env.SMTP_USER,
-          pass: import.meta.env.SMTP_PASS,
-        },
-      });
-
-      const mailOptions = {
-        from: `"Pequeños Momentos" <${import.meta.env.SMTP_USER}>`,
-        to: customerEmail,
-        bcc: import.meta.env.SMTP_USER,
-        subject: `Confirmación de ${productName} - Pequeños Momentos`,
-        html: `
-          <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
-            <h1 style="color: #6b46c1;">¡Gracias por tu compra, ${customerName}!</h1>
-            <p>Hemos recibido tu pago para la <strong>${productName}</strong> exitosamente.</p>
-            <p>Estamos emocionados de poder ayudarte a impulsar tu proyecto.</p>
-            <hr style="border: 1px solid #eee; margin: 20px 0;">
-            <h3>Detalles de tu compra:</h3>
-            <ul>
-              <li><strong>Servicio:</strong> ${productName}</li>
-              <li><strong>Costo:</strong> ${amountTotal}</li>
-              <li><strong>Fecha:</strong> ${purchaseDate}</li>
-              <li><strong>Hora:</strong> ${purchaseTime}</li>
-              <li><strong>Referencia:</strong> ${sessionId}</li>
-            </ul>
-            <p>Pronto nos pondremos en contacto contigo para agendar tu sesión.</p>
-            <p>Si tienes alguna duda, puedes responder a este correo.</p>
-            <br>
-            <p>Atentamente,<br>El equipo de Pequeños Momentos</p>
-          </div>
-        `,
-      };
+      const resend = new Resend(import.meta.env.RESEND_API_KEY);
 
       try {
-        await transporter.sendMail(mailOptions);
-        console.log(`Correo enviado a ${customerEmail}`);
+        const { data, error } = await resend.emails.send({
+          from: 'Pequeños Momentos <noreply@pequenosmomentos.mx>',
+          to: [customerEmail],
+          bcc: ['hola.pequenosmomentos@pequenosmomentos.mx'],
+          subject: `Confirmación de ${productName} - Pequeños Momentos`,
+          html: `
+            <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
+              <h1 style="color: #6b46c1;">¡Gracias por tu compra, ${customerName}!</h1>
+              <p>Hemos recibido tu pago para la <strong>${productName}</strong> exitosamente.</p>
+              <p>Estamos emocionados de poder ayudarte a impulsar tu proyecto.</p>
+              <hr style="border: 1px solid #eee; margin: 20px 0;">
+              <h3>Detalles de tu compra:</h3>
+              <ul>
+                <li><strong>Servicio:</strong> ${productName}</li>
+                <li><strong>Costo:</strong> ${amountTotal}</li>
+                <li><strong>Fecha:</strong> ${purchaseDate}</li>
+                <li><strong>Hora:</strong> ${purchaseTime}</li>
+                <li><strong>Referencia:</strong> ${sessionId}</li>
+              </ul>
+              <p>Pronto nos pondremos en contacto contigo para agendar tu sesión.</p>
+              <p>Si tienes alguna duda, puedes responder a este correo.</p>
+              <br>
+              <p>Atentamente,<br>El equipo de Pequeños Momentos</p>
+            </div>
+          `
+        });
+
+        if (error) {
+          console.error("Error enviando correo con Resend:", error);
+        } else {
+          console.log(`Correo enviado a ${customerEmail}`, data);
+        }
       } catch (emailError) {
         console.error("Error enviando correo:", emailError);
       }
