@@ -3,49 +3,55 @@ import Layout from "../layouts/Layout.astro";
 import Stripe from "stripe";
 import { Resend } from "resend";
 
-const sessionId = Astro.url.searchParams.get('session_id') || Astro.url.searchParams.get('sid');
-let customerEmail = '';
-let productName = 'Servicio';
+const sessionId =
+  Astro.url.searchParams.get("session_id") || Astro.url.searchParams.get("sid");
+let customerEmail = "";
+let productName = "Servicio";
 
 if (sessionId) {
   const stripe = new Stripe(import.meta.env.STRIPE_SECRET_KEY);
-  
+
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId, {
-      expand: ['line_items']
+      expand: ["line_items"],
     });
-    
-    customerEmail = session.customer_details?.email || '';
-    const customerName = session.customer_details?.name || 'Cliente';
-    
+
+    customerEmail = session.customer_details?.email || "";
+    const customerName = session.customer_details?.name || "Cliente";
+
     // Obtener el nombre del producto
     const lineItem = session.line_items?.data[0];
     if (lineItem && lineItem.description) {
       productName = lineItem.description;
     } else if (lineItem && lineItem.price && lineItem.price.product) {
-       // Fallback si la descripción no está directa (aunque en checkout se pasa como name/description)
-       // En checkout.ts: product_data: { name: "..." } se mapea a description en line_item a veces o price.product
-       // Stripe API: line_item.description suele ser el product name.
-       productName = lineItem.description || 'Servicio Premium';
+      // Fallback si la descripción no está directa (aunque en checkout se pasa como name/description)
+      // En checkout.ts: product_data: { name: "..." } se mapea a description en line_item a veces o price.product
+      // Stripe API: line_item.description suele ser el product name.
+      productName = lineItem.description || "Servicio Premium";
     }
 
-    // Normalizar el nombre para comparaciones si es necesario, 
+    // Normalizar el nombre para comparaciones si es necesario,
     // pero usaremos el valor directo para el correo.
-    
-    const amountTotal = session.amount_total ? (session.amount_total / 100).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' }) : '';
-    
+
+    const amountTotal = session.amount_total
+      ? (session.amount_total / 100).toLocaleString("es-MX", {
+          style: "currency",
+          currency: "MXN",
+        })
+      : "";
+
     // Obtener fecha y hora actual en CDMX
     const now = new Date();
-    const purchaseDate = now.toLocaleDateString('es-MX', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric',
-      timeZone: 'America/Mexico_City'
+    const purchaseDate = now.toLocaleDateString("es-MX", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "America/Mexico_City",
     });
-    const purchaseTime = now.toLocaleTimeString('es-MX', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      timeZone: 'America/Mexico_City'
+    const purchaseTime = now.toLocaleTimeString("es-MX", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "America/Mexico_City",
     });
 
     // Enviar correo si tenemos el email
@@ -54,9 +60,9 @@ if (sessionId) {
 
       try {
         const { data, error } = await resend.emails.send({
-          from: 'Pequeños Momentos <noreply@pequenosmomentos.mx>',
+          from: "Pequeños Momentos <noreply@pequenosmomentos.mx>",
           to: [customerEmail],
-          bcc: ['hola.pequenosmomentos@pequenosmomentos.mx'],
+          bcc: ["hola.pequenosmomentos@pequenosmomentos.mx"],
           subject: `Confirmación de ${productName} - Pequeños Momentos`,
           html: `
             <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
@@ -77,7 +83,7 @@ if (sessionId) {
               <br>
               <p>Atentamente,<br>El equipo de Pequeños Momentos</p>
             </div>
-          `
+          `,
         });
 
         if (error) {
@@ -96,32 +102,52 @@ if (sessionId) {
 ---
 
 <Layout>
-  <main class="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-100 to-white px-4">
-    <div class="max-w-xl w-full bg-white rounded-xl shadow-2xl p-8 text-center space-y-6">
-      <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+  <main
+    class="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-100 to-white px-4 pl-18 md:pl-0"
+  >
+    <div
+      class="max-w-xl w-full bg-white rounded-xl shadow-2xl p-8 text-center space-y-6"
+    >
+      <div
+        class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto"
+      >
         <span class="text-4xl">✅</span>
       </div>
-      
+
       <h1 class="text-3xl font-bold text-gray-800">¡Pago Exitoso!</h1>
-      
-      <p class="text-gray-600">
-        Gracias por tu compra de <strong>{productName}</strong>. Hemos recibido tu pago correctamente.
-        {sessionId && <span class="block text-xs text-gray-400 mt-2">ID de referencia: {sessionId}</span>}
-      </p>
 
-      <div class="bg-purple-50 p-4 rounded-lg">
-        <p class="text-sm text-purple-800 font-medium">
-          Te hemos enviado un correo con los detalles de tu servicio y los pasos a seguir
-          {customerEmail && <span> a <strong>{customerEmail}</strong></span>}.
-        </p>
-      </div>
-
-      <a
-        href="/"
-        class="block w-full py-3 px-6 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors duration-300"
-      >
-        Volver al Inicio
-      </a>
+      <p class="text-gray-600 max-w-lg mx-auto"></p>
+      Gracias por tu compra de <strong>{productName}</strong>. Hemos recibido tu
+      pago correctamente.
+      {
+        sessionId && (
+          <span class="block text-xs text-gray-400 mt-2 break-all">
+            ID de referencia: {sessionId}
+          </span>
+        )
+      }
     </div>
+
+    <div class="bg-purple-50 p-4 rounded-lg">
+      <p class="text-sm text-purple-800 font-medium">
+        Te hemos enviado un correo con los detalles de tu servicio y los pasos a
+        seguir
+        {
+          customerEmail && (
+            <span>
+              {" "}
+              a <strong>{customerEmail}</strong>
+            </span>
+          )
+        }.
+      </p>
+    </div>
+
+    <a
+      href="/"
+      class="block w-full py-3 px-6 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors duration-300"
+    >
+      Volver al Inicio
+    </a>
   </main>
 </Layout>
