@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, getEntryBySlug } from "astro:content";
 import * as Icons from "../../components/Icons";
 import Layout from "../../layouts/Layout.astro";
 import { render } from "astro:content";
@@ -12,14 +12,48 @@ export async function getStaticPaths() {
   }));
 }
 
-const { actividad } = Astro.props;
-const { data } = actividad;
-const { title, shortTitle, description, video, icon, images } = data;
-const { Content } = await render(actividad);
-const IconComponent = (Icons as Record<string, any>)[icon];
+let { actividad } = Astro.props as { actividad?: any };
+
+if (!actividad) {
+  const { id } = Astro.params;
+  if (id) {
+    const getBySlug = getEntryBySlug as any;
+    actividad = await getBySlug("actividades", id);
+  }
+}
+
+if (!actividad) {
+  Astro.response.status = 404;
+}
+
+const data = actividad?.data;
+const title = data?.title ?? "Actividad";
+const shortTitle = data?.shortTitle ?? "Actividad";
+const description = data?.description ?? "";
+const video = data?.video;
+const icon = data?.icon;
+const images = data?.images;
+const rendered = actividad ? await render(actividad) : null;
+const Content = rendered?.Content;
+const IconComponent = icon ? (Icons as Record<string, any>)[icon] : undefined;
 ---
 
 <Layout title={title} description={description}>
+  {
+    !actividad ? (
+      <section class="py-20 bg-white">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+          <h1 class="text-3xl font-bold text-gray-900 mb-4">Actividad no encontrada</h1>
+          <p class="text-gray-600 mb-8">La actividad que buscas no existe o fue movida.</p>
+          <a
+            href="/actividades"
+            class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-xl font-semibold"
+          >
+            Ver actividades
+          </a>
+        </div>
+      </section>
+    ) : (
   <!-- Hero Section Mejorado -->
   <section
     class="relative overflow-hidden bg-gradient-to-br from-pink-100 via-green-100 to-sky-100"
@@ -194,7 +228,7 @@ const IconComponent = (Icons as Record<string, any>)[icon];
         <div
           class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-3xl p-3 shadow-inner"
         >
-          <Content />
+          {Content ? <Content /> : null}
         </div>
       </article>
 
@@ -226,4 +260,6 @@ const IconComponent = (Icons as Record<string, any>)[icon];
       </div>
     </div>
   </section>
+    )
+  }
 </Layout>
