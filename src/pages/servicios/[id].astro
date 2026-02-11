@@ -25,7 +25,8 @@ if (!servicio) {
   const { id } = Astro.params;
   if (id) {
     try {
-      const result = await getEntryBySlug("servicios", id);
+      const getBySlug = getEntryBySlug as any;
+      const result = await getBySlug("servicios", id);
       if (result) {
         servicio = result;
       }
@@ -50,7 +51,6 @@ const rendered = servicio ? await render(servicio) : null;
 const Content = rendered?.Content;
 const IconComponent = icon ? (Icons as Record<string, any>)[icon] : undefined;
 
-// Generar mensaje de WhatsApp
 const whatsappMessage = `Hola, me gustaría cotizar el servicio ${shortTitle}`;
 const whatsappUrl = `https://web.whatsapp.com/send?phone=525539385685&text=${encodeURIComponent(whatsappMessage)}`;
 ---

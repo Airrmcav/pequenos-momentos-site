@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, getEntryBySlug } from "astro:content";
 import * as Icons from "../../components/Icons";
 import Layout from "../../layouts/Layout.astro";
 import { render } from "astro:content";
@@ -12,13 +12,44 @@ export async function getStaticPaths() {
   }));
 }
 
-const { paquete } = Astro.props;
-const { data } = paquete;
-const { title, description, video } = data;
-const { Content } = await render(paquete);
+let { paquete } = Astro.props as { paquete?: any };
+
+if (!paquete) {
+  const { id } = Astro.params;
+  if (id) {
+    const getBySlug = getEntryBySlug as any;
+    paquete = await getBySlug("paquetes", id);
+  }
+}
+
+if (!paquete) {
+  Astro.response.status = 404;
+}
+
+const data = paquete?.data;
+const title = data?.title ?? "Paquete";
+const description = data?.description ?? "";
+const video = data?.video;
+const rendered = paquete ? await render(paquete) : null;
+const Content = rendered?.Content;
 ---
 
 <Layout title={title} description={description}>
+  {
+    !paquete ? (
+      <section class="py-20 bg-white">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+          <h1 class="text-3xl font-bold text-gray-900 mb-4">Paquete no encontrado</h1>
+          <p class="text-gray-600 mb-8">El paquete que buscas no existe o fue movido.</p>
+          <a
+            href="/paquetes"
+            class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-xl font-semibold"
+          >
+            Ver paquetes
+          </a>
+        </div>
+      </section>
+    ) : (
   <!-- Hero Section Mejorado -->
   <section
     class="relative overflow-hidden bg-gradient-to-br from-pink-100 via-green-100 to-sky-100"
@@ -84,13 +115,15 @@ const { Content } = await render(paquete);
 
             <!-- Media principal -->
             <div class="relative order-1 lg:order-2 h-96 lg:h-[600px]">
-              <video
-                src={video}
-                autoplay
-                loop
-                muted
-                playsinline
-                class="w-full h-full object-cover"></video>
+              {video ? (
+                <video
+                  src={video}
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                  class="w-full h-full object-cover"></video>
+              ) : null}
 
               <!-- Overlay gradient -->
               <div
@@ -166,7 +199,7 @@ const { Content } = await render(paquete);
         <div
           class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-3xl p-8 shadow-inner"
         >
-          <Content />
+          {Content ? <Content /> : null}
         </div>
       </article>
 
@@ -198,4 +231,6 @@ const { Content } = await render(paquete);
       </div>
     </div>
   </section>
+    )
+  }
 </Layout>
